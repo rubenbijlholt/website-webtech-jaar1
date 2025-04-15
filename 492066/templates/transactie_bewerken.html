@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactie Bewerken - Budget Beheer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- bovenste deel met welkomstbericht -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="logo-text">Ruben's Budgetbeheer</h1>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted">Welkom, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Uitloggen</a>
+                    </div>
+                </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <div class="container-fluid">
+                        <div class="navbar-nav">
+                            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a class="nav-link active" href="{{ url_for('transacties') }}">Alle Transacties</a>
+                            <a class="nav-link" href="{{ url_for('categorieen') }}">Categorieën</a>
+                            <a class="nav-link" href="{{ url_for('budgetten') }}">Budgetten</a>
+                            <a class="nav-link" href="{{ url_for('spaarpotjes') }}">Spaarpotjes</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- berichten die verschijnen na acties -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'success' else 'success' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Formulier voor het bewerken van een transactie -->
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title h5 mb-4">Transactie Bewerken</h2>
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        {{ form.type.label(class="form-label") }}
+                        {{ form.type(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.omschrijving.label(class="form-label") }}
+                        {{ form.omschrijving(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.bedrag.label(class="form-label") }}
+                        {{ form.bedrag(class="form-control", step="0.01", type="number") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.categorie_id.label(class="form-label") }}
+                        {{ form.categorie_id(class="form-select") }}
+                    </div>
+                    <div class="d-flex gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('transacties') }}" class="btn btn-danger">Annuleren</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="card mt-4">
+            <div class="card-body text-center">
+                <p class="mb-1"> 2025 - Gemaakt door Ruben</p>
+                <p class="mb-0">Schoolopdracht voor Webtechnologie - Docent: Henk Tattje</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,274 @@
+/* basis stijlen voor de hele pagina */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eeeeee;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* logo styling */
+.logo-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: none;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 1rem 0;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* hoe de container eruit ziet */
+.container {
+    max-width: 1200px;
+    padding: 2rem 1rem;
+}
+
+/* hoe de kaarten eruit zien */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background-color: rgba(236, 240, 245, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* hoe de tabellen eruit zien */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 600;
+    border-top: none;
+    background-color: #e6eaf0;
+    padding: 1rem;
+}
+
+.table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* hoe de formulieren eruit zien */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    background-color: #e6eaf0;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.form-control, .form-select {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+/* hoe de knoppen eruit zien */
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+}
+
+/* hoe de waarschuwingsberichten eruit zien */
+.alert {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+}
+
+/* speciale stijlen voor de login en registratie pagina */
+.login-register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.login-register-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(236, 240, 245, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-register-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.action-title-container {
+    background-color: #e6eaf0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.action-title {
+    margin: 0;
+    color: #6c757d;
+}
+
+/* balance card styles */
+.balance-card {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #ecf0f5, #e6eaf0);
+}
+
+/* special styling for current balance */
+.balance-card.current-balance {
+    background: linear-gradient(145deg, #ecf0f5, #e3f2fd);
+    border: 2px solid #2196f3;
+}
+
+/* special styling for income */
+.balance-card.income {
+    border: 2px solid #28a745;
+}
+
+/* special styling for expenses */
+.balance-card.expense {
+    border: 2px solid #dc3545;
+}
+
+.balance-card .card-body {
+    padding: 1.25rem;
+    text-align: center;
+    width: 100%;
+}
+
+.balance-card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.balance-card .display-6 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+}
+
+/* amounts container styles */
+.amounts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 50%;
+}
+
+.amount-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #ecf0f5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.amount-item h3 {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.amount-item.income {
+    border-left: 4px solid #28a745;
+}
+
+.amount-item.expense {
+    border-left: 4px solid #dc3545;
+}
+
+/* savings progress styles */
+.savings-progress {
+    padding: 1rem;
+    background: #ecf0f5;
+    border-radius: 10px;
+    border: 2px solid #2196f3;
+}
+
+.savings-progress h6 {
+    color: #495057;
+    font-weight: normal;
+}
+
+.savings-progress .progress {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.savings-progress .progress-bar {
+    transition: width 0.3s ease;
+}
+
+.savings-progress small {
+    font-size: 0.8rem;
+}
+
+/* scroll message styles */
+.scroll-message {
+    background: rgba(236, 240, 245, 0.8);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 500;
+    color: #212529;
+    backdrop-filter: blur(5px);
+}
+
+.scroll-message i {
+    font-size: 1.2rem;
+}
+
+.progress {
+    height: 10px;
+}
+
+.navbar {
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+}
+
+.navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.navbar-nav .nav-link.active {
+    background-color: transparent;
+    color: #007bff !important;
+    border: 1px solid #007bff;
+} 

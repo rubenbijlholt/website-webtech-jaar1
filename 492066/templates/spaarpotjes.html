@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Beheer - Spaarpotjes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- bovenste deel met welkomstbericht -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="logo-text">Ruben's Budgetbeheer</h1>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted">Welkom, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Uitloggen</a>
+                    </div>
+                </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <div class="container-fluid">
+                        <div class="navbar-nav">
+                            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a class="nav-link" href="{{ url_for('transacties') }}">Alle Transacties</a>
+                            <a class="nav-link" href="{{ url_for('categorieen') }}">Categorieën</a>
+                            <a class="nav-link" href="{{ url_for('budgetten') }}">Budgetten</a>
+                            <a class="nav-link active" href="{{ url_for('spaarpotjes') }}">Spaarpotjes</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- berichten die verschijnen na acties -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'success' else 'success' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- formulier om nieuw spaarpotje toe te voegen -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Nieuw spaarpotje toevoegen</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('spaarpotje_toevoegen') }}">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        <label for="naam" class="form-label">Naam</label>
+                        {{ form.naam(class="form-control") }}
+                        {% if form.naam.errors %}
+                            {% for error in form.naam.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="doelbedrag" class="form-label">Doelbedrag</label>
+                        {{ form.doelbedrag(class="form-control") }}
+                        {% if form.doelbedrag.errors %}
+                            {% for error in form.doelbedrag.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                </form>
+            </div>
+        </div>
+
+        <!-- formulier om geld toe te voegen/af te halen -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Geld toevoegen/afhalen</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('spaarpotje_geld', id=0) }}">
+                    {{ geld_form.csrf_token }}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="spaarpotje" class="form-label">Spaarpotje</label>
+                                <select name="spaarpotje_id" class="form-select" required>
+                                    {% for spaarpotje in spaarpotjes %}
+                                    <option value="{{ spaarpotje.id }}">{{ spaarpotje.naam }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Type</label>
+                                {{ geld_form.type(class="form-select") }}
+                                {% if geld_form.type.errors %}
+                                    {% for error in geld_form.type.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="bedrag" class="form-label">Bedrag</label>
+                                {{ geld_form.bedrag(class="form-control", placeholder="€0.00") }}
+                                {% if geld_form.bedrag.errors %}
+                                    {% for error in geld_form.bedrag.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {{ geld_form.submit(class="btn btn-primary") }}
+                </form>
+            </div>
+        </div>
+        
+        <!-- lijst met alle spaarpotjes -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Alle spaarpotjes</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Naam</th>
+                                <th>Huidig bedrag</th>
+                                <th>Doelbedrag</th>
+                                <th>Voortgang</th>
+                                <th>Acties</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for spaarpotje in spaarpotjes %}
+                            <tr>
+                                <td>{{ spaarpotje.naam }}</td>
+                                <td>€{{ "%.2f"|format(spaarpotje.huidig_bedrag) }}</td>
+                                <td>€{{ "%.2f"|format(spaarpotje.doelbedrag) }}</td>
+                                <td>
+                                    <div class="progress">
+                                        {% set percentage = (spaarpotje.huidig_bedrag / spaarpotje.doelbedrag * 100)|round|int %}
+                                        <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%">
+                                            {{ percentage }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('spaarpotje_verwijderen', id=spaarpotje.id) }}" 
+                                       class="btn btn-danger btn-sm">
+                                        Verwijderen
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="card mt-4">
+            <div class="card-body text-center">
+                <p class="mb-1">© 2025 - Gemaakt door Ruben</p>
+                <p class="mb-0">Schoolopdracht voor Webtechnologie - Docent: Henk Tattje</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html> 

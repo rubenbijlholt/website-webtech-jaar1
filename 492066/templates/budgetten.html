@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Beheer - Budgetten</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- bovenste deel met welkomstbericht -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="logo-text">Ruben's Budgetbeheer</h1>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted">Welkom, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Uitloggen</a>
+                    </div>
+                </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <div class="container-fluid">
+                        <div class="navbar-nav">
+                            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a class="nav-link" href="{{ url_for('transacties') }}">Alle Transacties</a>
+                            <a class="nav-link" href="{{ url_for('categorieen') }}">Categorieën</a>
+                            <a class="nav-link active" href="{{ url_for('budgetten') }}">Budgetten</a>
+                            <a class="nav-link" href="{{ url_for('spaarpotjes') }}">Spaarpotjes</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- berichten die verschijnen na acties -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'success' else 'success' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- formulier om nieuw budget toe te voegen -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Nieuw budget toevoegen</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('budget_toevoegen') }}">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        <label for="bedrag" class="form-label">Bedrag</label>
+                        {{ form.bedrag(class="form-control") }}
+                        {% if form.bedrag.errors %}
+                            {% for error in form.bedrag.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="categorie_id" class="form-label">Categorie</label>
+                        {{ form.categorie_id(class="form-select") }}
+                        {% if form.categorie_id.errors %}
+                            {% for error in form.categorie_id.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                </form>
+            </div>
+        </div>
+        
+        <!-- lijst met alle budgetten -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Alle budgetten</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Categorie</th>
+                                <th>Bedrag</th>
+                                <th>Huidige uitgaven</th>
+                                <th>Acties</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgetten %}
+                            <tr>
+                                <td>{{ budget.categorie.naam }}</td>
+                                <td>€{{ "%.2f"|format(budget.bedrag) }}</td>
+                                <td>€{{ "%.2f"|format(budget_uitgaven[budget.id]) }}</td>
+                                <td>
+                                    <a href="{{ url_for('budget_verwijderen', id=budget.id) }}" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Weet je zeker dat je dit budget wilt verwijderen?')">
+                                        Verwijderen
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="card mt-4">
+            <div class="card-body text-center">
+                <p class="mb-1">© 2025 - Gemaakt door Ruben</p>
+                <p class="mb-0">Schoolopdracht voor Webtechnologie - Docent: Henk Tattje</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html> 
