@@ -26,5 +26,5 @@ De opdracht was om een website te bouwen met **HTML**, **CSS**, **Bootstrap**, *
 
 - Ruben Bijlholt
 - 📧 rj.bijlholt@st.hanze.nl
-- 
+
 
